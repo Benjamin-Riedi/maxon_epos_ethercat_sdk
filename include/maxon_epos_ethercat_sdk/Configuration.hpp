@@ -65,11 +65,12 @@ class Configuration {
   double maxCurrentA{0};
   int32_t minPosition{0};
   int32_t maxPosition{0};
+  uint32_t maxMotorSpeed{5000};
   uint32_t maxProfileVelocity{1};
-  uint32_t maxGearInputSpeed{0};
+  uint32_t maxGearInputSpeed{5000};
   uint32_t quickStopDecel{10000};
   uint32_t profileDecel{10000};
-  uint32_t followErrorWindow{2000};
+  uint32_t followErrorWindow{20000000};
   double currentPGainSI{1.171880};
   double currentIGainSI{3906.250};
   double positionPGainSI{1.5};

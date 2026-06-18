@@ -724,24 +724,26 @@ bool Maxon::configParam() {
       sdoVerifyWrite(OD_INDEX_SI_UNIT_VELOCITY, 0x00, false, velocity_unit,
                      configuration_.configRunSdoVerifyTimeout);
 
-  maxMotorSpeed = static_cast<uint32_t>(configuration_.workVoltage *
-                                        configuration_.speedConstant);
+  // maxMotorSpeed = static_cast<uint32_t>(configuration_.workVoltage *
+  //                                       configuration_.speedConstant);
+  maxMotorSpeed = static_cast<uint32_t>(configuration_.maxMotorSpeed);
                                         
   configSuccess &=
       sdoVerifyWrite(OD_INDEX_MAX_MOTOR_SPEED, 0x00, false, maxMotorSpeed,
                      configuration_.configRunSdoVerifyTimeout);
 
-  maxProfileVelocity = static_cast<uint32_t>(configuration_.maxProfileVelocity *
-                                             60.0 / (2 * M_PI));
-
-  configSuccess &= sdoVerifyWrite(OD_INDEX_MAX_PROFILE_VELOCITY, 0x00, false,
-                                  maxProfileVelocity,
-                                  configuration_.configRunSdoVerifyTimeout);
-
   maxGearInputSpeed = static_cast<uint32_t>(configuration_.maxGearInputSpeed);
 
   configSuccess &= sdoVerifyWrite(OD_INDEX_GEAR_DATA, 0x03, false,
                                   maxGearInputSpeed,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+  // maxProfileVelocity = static_cast<uint32_t>(configuration_.maxProfileVelocity *
+  //                                            60.0 / (2 * M_PI));
+  maxProfileVelocity = static_cast<uint32_t>(configuration_.maxProfileVelocity);
+
+  configSuccess &= sdoVerifyWrite(OD_INDEX_MAX_PROFILE_VELOCITY, 0x00, false,
+                                  maxProfileVelocity,
                                   configuration_.configRunSdoVerifyTimeout);
 
   configSuccess &= sdoVerifyWrite(OD_INDEX_SOFTWARE_POSITION_LIMIT, 0x01, false,

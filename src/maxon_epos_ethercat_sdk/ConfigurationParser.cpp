@@ -271,6 +271,11 @@ void ConfigurationParser::parseConfiguration(YAML::Node configNode) {
       configuration_.maxPosition = maxPosition;
     }
 
+    uint32_t maxMotorSpeed;
+    if (getValueFromFile(hardwareNode, "max_motor_speed", maxMotorSpeed)) {
+      configuration_.maxMotorSpeed = maxMotorSpeed;
+    }
+
     uint32_t maxGearInputSpeed;
     if (getValueFromFile(hardwareNode, "max_gear_input_speed",
                          maxGearInputSpeed)) {

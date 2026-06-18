@@ -117,9 +117,106 @@ bool Maxon::startup() {
 
   // To be on the safe side: set currect PDO sizes
   autoConfigurePdoSizes();
+  
+  // read the current value of the follow error window to check if the communication is working properly
+  uint32_t followErrorWindow;
+  uint32_t maxProfileVelocity;
+  uint32_t velocityUnit;
+  uint32_t maxMotorSpeed;
+  uint32_t maxGearInputSpeed;
+  uint32_t nominalCurrent;
+  uint32_t maxCurrent;
+  uint32_t torqueConstant;
+  uint32_t quickStopDecel;
+  uint32_t profileDecel;
+  uint32_t currentPGain;
+  uint32_t currentIGain;
+  uint32_t positionPGain;
+  uint32_t positionIGain;
+  uint32_t positionDGain;
+  uint32_t velocityPGain;
+  uint32_t velocityIGain;
+
+  // success &= sendSdoRead(OD_INDEX_FOLLOW_ERROR_WINDOW, 0x00, false, followErrorWindow);
+  // success &= sendSdoRead(OD_INDEX_MAX_PROFILE_VELOCITY, 0x00, false, maxProfileVelocity);
+  // success &= sendSdoRead(OD_INDEX_SI_UNIT_VELOCITY, 0x00, false, velocityUnit);
+  // success &= sendSdoRead(OD_INDEX_MAX_MOTOR_SPEED, 0x00, false, maxMotorSpeed);
+  // success &= sendSdoRead(OD_INDEX_MAX_PROFILE_VELOCITY, 0x00, false, maxProfileVelocity);
+  // success &= sendSdoRead(OD_INDEX_GEAR_DATA, 0x03, false, maxGearInputSpeed);
+  // success &= sendSdoRead(OD_INDEX_MOTOR_DATA, 0x01, false, nominalCurrent);
+  // success &= sendSdoRead(OD_INDEX_MOTOR_DATA, 0x02, false, maxCurrent);
+  // success &= sendSdoRead(OD_INDEX_MOTOR_DATA, 0x05, false, torqueConstant);
+  // success &= sendSdoRead(OD_INDEX_QUICKSTOP_DECELERATION, 0x00, false, quickStopDecel);
+  // success &= sendSdoRead(OD_INDEX_PROFILE_DECELERATION, 0x00, false, profileDecel);
+
+  // std::cout << "followErrorWindow: " << followErrorWindow << std::endl;
+  // std::cout << "maxProfileVelocity: " << maxProfileVelocity << std::endl;
+  // std::cout << "velocityUnit: " << velocityUnit << std::endl;
+  // std::cout << "maxMotorSpeed: " << maxMotorSpeed << "= workVoltage * speedConstant" << configuration_.workVoltage << "*" << configuration_.speedConstant << std::endl;
+  // std::cout << "maxGearInputSpeed: " << maxGearInputSpeed << std::endl;
+  // std::cout << "nominalCurrent: " << nominalCurrent << std::endl;
+  // std::cout << "maxCurrent: " << maxCurrent << std::endl;
+  // std::cout << "torqueConstant: " << torqueConstant << std::endl;
+  // std::cout << "quickStopDecel: " << quickStopDecel << std::endl;
+  // std::cout << "profileDecel: " << profileDecel << std::endl;
+
+  // success &= sendSdoRead(OD_INDEX_CURRENT_CONTROL_PARAM, 0x01, false, currentPGain);
+  // success &= sendSdoRead(OD_INDEX_CURRENT_CONTROL_PARAM, 0x02, false, currentIGain);
+  // success &= sendSdoRead(OD_INDEX_POSITION_CONTROL_PARAM, 0x01, false, positionPGain);
+  // success &= sendSdoRead(OD_INDEX_POSITION_CONTROL_PARAM, 0x02, false, positionIGain);
+  // success &= sendSdoRead(OD_INDEX_POSITION_CONTROL_PARAM, 0x03, false, positionDGain);
+  // success &= sendSdoRead(OD_INDEX_VELOCITY_CONTROL_PARAM, 0x01, false, velocityPGain);
+  // success &= sendSdoRead(OD_INDEX_VELOCITY_CONTROL_PARAM, 0x02, false, velocityIGain);
+  // std::cout << "currentPGain: " << currentPGain << std::endl;
+  // std::cout << "currentIGain: " << currentIGain << std::endl;
+  // std::cout << "positionPGain: " << positionPGain << std::endl;
+  // std::cout << "positionIGain: " << positionIGain << std::endl;
+  // std::cout << "positionDGain: " << positionDGain << std::endl;
+  // std::cout << "velocityPGain: " << velocityPGain << std::endl;
+  // std::cout << "velocityIGain: " << velocityIGain << std::endl;
 
   // write the configuration parameters via Sdo
   success &= configParam();
+
+  // success &= sendSdoRead(OD_INDEX_FOLLOW_ERROR_WINDOW, 0x00, false, followErrorWindow);
+  // success &= sendSdoRead(OD_INDEX_MAX_PROFILE_VELOCITY, 0x00, false, maxProfileVelocity);
+  // success &= sendSdoRead(OD_INDEX_SI_UNIT_VELOCITY, 0x00, false, velocityUnit);
+  // success &= sendSdoRead(OD_INDEX_MAX_MOTOR_SPEED, 0x00, false, maxMotorSpeed);
+  // success &= sendSdoRead(OD_INDEX_MAX_PROFILE_VELOCITY, 0x00, false, maxProfileVelocity);
+  // success &= sendSdoRead(OD_INDEX_GEAR_DATA, 0x03, false, maxGearInputSpeed);
+  // success &= sendSdoRead(OD_INDEX_MOTOR_DATA, 0x01, false, nominalCurrent);
+  // success &= sendSdoRead(OD_INDEX_MOTOR_DATA, 0x02, false, maxCurrent);
+  // success &= sendSdoRead(OD_INDEX_MOTOR_DATA, 0x05, false, torqueConstant);
+  // success &= sendSdoRead(OD_INDEX_QUICKSTOP_DECELERATION, 0x00, false, quickStopDecel);
+  // success &= sendSdoRead(OD_INDEX_PROFILE_DECELERATION, 0x00, false, profileDecel);
+  // std::cout << "After writing configuration parameters via Sdo, the values are: " << std::endl;
+  // std::cout << "followErrorWindow: " << followErrorWindow << std::endl;
+  // std::cout << "maxProfileVelocity: " << maxProfileVelocity << std::endl;
+  // std::cout << "velocityUnit: " << velocityUnit << std::endl;
+  // std::cout << "maxMotorSpeed: " << maxMotorSpeed << "=" << configuration_.workVoltage << "*" << configuration_.speedConstant << std::endl;
+  // std::cout << "maxGearInputSpeed: " << maxGearInputSpeed << std::endl;
+  // std::cout << "nominalCurrent: " << nominalCurrent << std::endl;
+  // std::cout << "maxCurrent: " << maxCurrent << std::endl;
+  // std::cout << "torqueConstant: " << torqueConstant << std::endl;
+  // std::cout << "quickStopDecel: " << quickStopDecel << std::endl;
+  // std::cout << "profileDecel: " << profileDecel << std::endl;
+
+
+  // success &= sendSdoRead(OD_INDEX_CURRENT_CONTROL_PARAM, 0x01, false, currentPGain);
+  // success &= sendSdoRead(OD_INDEX_CURRENT_CONTROL_PARAM, 0x02, false, currentIGain);
+  // success &= sendSdoRead(OD_INDEX_POSITION_CONTROL_PARAM, 0x01, false, positionPGain);
+  // success &= sendSdoRead(OD_INDEX_POSITION_CONTROL_PARAM, 0x02, false, positionIGain);
+  // success &= sendSdoRead(OD_INDEX_POSITION_CONTROL_PARAM, 0x03, false, positionDGain);
+  // success &= sendSdoRead(OD_INDEX_VELOCITY_CONTROL_PARAM, 0x01, false, velocityPGain);
+  // success &= sendSdoRead(OD_INDEX_VELOCITY_CONTROL_PARAM, 0x02, false, velocityIGain);
+  // std::cout << "After writing configuration parameters via Sdo, the control gains are: " << std::endl;
+  // std::cout << "currentPGain: " << currentPGain << std::endl;
+  // std::cout << "currentIGain: " << currentIGain << std::endl;
+  // std::cout << "positionPGain: " << positionPGain << std::endl;
+  // std::cout << "positionIGain: " << positionIGain << std::endl;
+  // std::cout << "positionDGain: " << positionDGain << std::endl;
+  // std::cout << "velocityPGain: " << velocityPGain << std::endl;
+  // std::cout << "velocityIGain: " << velocityIGain << std::endl;
 
   if (!success) {
     MELO_ERROR_STREAM(
@@ -387,12 +484,14 @@ void Maxon::updateRead() {
   if (reading_.getDriveState() == DriveState::FaultReactionActive) {
     MELO_ERROR_STREAM("[maxon_epos_ethercat_sdk:Maxon::updateRead] '"
                       << name_ << "' is in drive state 'FaultReactionAcrive'");
+    printErrorCode();
   }
 
   // Print warning if drive is in Fault state.
   if (reading_.getDriveState() == DriveState::Fault) {
     MELO_ERROR_STREAM("[maxon_epos_ethercat_sdk:Maxon::updateRead] '"
                       << name_ << "' is in drive state 'Fault'");
+    printErrorCode();
   }
 }
 
