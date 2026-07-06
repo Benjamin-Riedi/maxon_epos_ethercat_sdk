@@ -50,6 +50,9 @@ std::ostream& operator<<(std::ostream& os,
     case maxon::TxPdoTypeEnum::TxPdoCSV:
       os << "TxPdoCSV";
       break;
+    case maxon::TxPdoTypeEnum::TxPdoHM:
+      os << "TxPdoHM";
+      break;
     default:
       break;
   }
@@ -75,6 +78,9 @@ std::ostream& operator<<(std::ostream& os,
       break;
     case maxon::RxPdoTypeEnum::RxPdoPVM:
       os << "RxPdoPVM";
+      break;
+    case maxon::RxPdoTypeEnum::RxPdoHM:
+      os << "RxPdoHM";
       break;
     default:
       break;

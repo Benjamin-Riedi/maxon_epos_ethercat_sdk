@@ -467,6 +467,16 @@ void Maxon::updateRead() {
       }
       break;
     }
+    case TxPdoTypeEnum::TxPdoHM: {
+      TxPdoHM txPdo{};
+      // reading from the bus
+      bus_->readTxPdo(address_, txPdo);
+      {
+        std::lock_guard<std::recursive_mutex> lock(readingMutex_);
+        reading_.setStatusword(txPdo.statusword_);
+      }
+      break;
+    }
     default:
       MELO_ERROR_STREAM(
           "[maxon_epos_ethercat_sdk:Maxon::updateRead] Unsupported Tx Pdo "

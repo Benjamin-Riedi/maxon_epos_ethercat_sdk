@@ -93,4 +93,9 @@ struct TxPdoPVM {
   int32_t demandVelocity_;
 } __attribute__((packed));
 
+struct TxPdoHM
+{
+  uint16_t statusword_;
+} __attribute__((packed));
+
 }  // namespace maxon

@@ -76,6 +76,8 @@ std::string rxPdoString(RxPdoTypeEnum rxPdo) {
       return "Rx PDO CST/CSP/CSV mixed mode";
     case RxPdoTypeEnum::RxPdoPVM:
       return "Rx PDO PVM";
+    case RxPdoTypeEnum::RxPdoHM:
+      return "Rx PDO Homing Mode";
     default:
       return "Unsupported Type";
   }
@@ -99,6 +101,8 @@ std::string txPdoString(TxPdoTypeEnum txPdo) {
       return "Tx PDO PVM";
     case TxPdoTypeEnum::TxPdoStandard:
       return "Tx PDO Standard";
+    case TxPdoTypeEnum::TxPdoHM:
+      return "Tx PDO Homing Mode";
     default:
       return "Unsupported Type";
   }
@@ -176,7 +180,7 @@ std::pair<RxPdoTypeEnum, TxPdoTypeEnum> Configuration::getPdoTypeSolution()
       },
       {
         { ModeOfOperationEnum::HomingMode },
-        { RxPdoTypeEnum::NA, TxPdoTypeEnum::NA }
+        { RxPdoTypeEnum::RxPdoHM, TxPdoTypeEnum::TxPdoHM }
       },
       {
         { ModeOfOperationEnum::ProfiledPositionMode },
