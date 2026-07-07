@@ -174,6 +174,11 @@ void ConfigurationParser::parseConfiguration(YAML::Node configNode) {
                          driveStateChangeMaxTimeout)) {
       configuration_.driveStateChangeMaxTimeout = driveStateChangeMaxTimeout;
     }
+    
+    bool disable_configuration_on_startup;
+    if (getValueFromFile(maxonNode, "disable_configuration_on_startup",
+                         disable_configuration_on_startup)) {
+      configuration_.disableConfigurationOnStartup = disable_configuration_on_startup;
   }
 
   /// The configuration options for the maxon::ethercat::Reading class
@@ -203,6 +208,48 @@ void ConfigurationParser::parseConfiguration(YAML::Node configNode) {
                          faultStorageCapacity)) {
       configuration_.faultStorageCapacity = faultStorageCapacity;
     }
+  }
+
+  /// The configuration options for homing
+  if (configNode["Homing"].IsDefined()) {
+    YAML::Node homingNode = configNode["Homing"];
+  //    homing_method: -4
+  // homing_speed: 120 # [rpm]
+  // homing_acceleration: 1000 # [rpm/s]
+  // homing_offset: 0 # [inc]
+  // home_position: 0 # [inc]
+  // current_threshold: 30 # [mA]
+    int8_t homingMethod;
+    if (getValueFromFile(homingNode, "homing_method", homingMethod)) {
+      configuration_.homingMethod = homingMethod;
+    }
+
+    std::pair<uint32_t, uint32_t> homingSpeeds;
+    if (getValueFromFile(homingNode, "homing_speed", homingSpeeds)) {
+      configuration_.speedForSwitchSearch = homingSpeeds.first;
+      configuration_.speedForZeroSearch = homingSpeeds.second;
+    }
+
+    uint32_t homingAcceleration;
+    if (getValueFromFile(homingNode, "homing_acceleration", homingAcceleration)) {
+      configuration_.homingAcceleration = homingAcceleration;
+    }
+
+    int32_t homeOffset;
+    if (getValueFromFile(homingNode, "homing_offset", homeOffset)) {
+      configuration_.homeOffset = homeOffset;
+    }
+
+    int32_t homePosition;
+    if (getValueFromFile(homingNode, "home_position", homePosition)) {
+      configuration_.homePosition = homePosition;
+    }
+
+    uint16_t currentThreshold;
+    if (getValueFromFile(homingNode, "current_threshold", currentThreshold)) {
+      configuration_.currentThreshold = currentThreshold;
+    }
+
   }
 
   /// The configuration options for the Maxon servo drive ("hardware")

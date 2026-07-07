@@ -68,7 +68,7 @@ class Command {
   void setPositionFactorRadToInteger(double factor);
   void setTorqueFactorNmToInteger(double factor);
   void setCurrentFactorAToInteger(double factor);
-
+  
   /// set user units
   void setTargetPosition(double targetPosition);
   void setTargetVelocity(double targetVelocity);
@@ -76,11 +76,19 @@ class Command {
   void setPositionOffset(double positionOffset);
   void setTorqueOffset(double velocityOffset);
   void setVelocityOffset(double velocityOffset);
-
+  
   /// other
   void setDigitalOutputs(uint32_t digitalOutputs);
   void setUseRawCommands(bool useRawCommands);
   void setModeOfOperation(const ModeOfOperationEnum modeOfOperation);
+  
+  /// homing parameters
+  void setHomingMethod(int8_t homingMethod);
+  void setHomingSpeeds(uint32_t speedForSwitchSearch, uint32_t speedForZeroSearch);
+  void setHomingAcceleration(uint32_t homingAcceleration);
+  void setHomeOffset(int32_t homeOffset);
+  void setHomePosition(int32_t homePosition);
+  void setCurrentThreshold(uint16_t currentThreshold);
 
   /// get (raw)
   int32_t getTargetPositionRaw() const;
@@ -99,6 +107,15 @@ class Command {
   double getTargetTorque() const;
   double getTorqueOffset() const;
   double getVelocityOffset() const;
+
+  /// get (homing)
+  int8_t getHomingMethod() const;
+  uint32_t getHomingSpeed0() const;
+  uint32_t getHomingSpeed1() const;
+  uint32_t getHomingAcceleration() const;
+  int32_t getHomeOffset() const;
+  int32_t getHomePosition() const;
+  uint16_t getCurrentThreshold() const;
 
   /*!
    * Get the digital outputs.
@@ -137,6 +154,14 @@ class Command {
   uint32_t profileAccel_{0};
   uint32_t profileDeccel_{0};
   int16_t motionProfileType_{0};
+
+  //homing variables
+  int8_t homingMethod_{0};
+  std::array<uint32_t, 2> homingSpeeds_{0, 0};
+  uint32_t homingAcceleration_{0};
+  int32_t homeOffset_{0};
+  int32_t homePosition_{0};
+  uint16_t currentThreshold_{0};
 
   std::mutex targetTorqueCommandMutex_;
 

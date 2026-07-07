@@ -189,6 +189,21 @@ void Command::setModeOfOperation(const ModeOfOperationEnum modeOfOperation) {
   modeOfOperation_ = modeOfOperation;
 }
 
+/*!
+ * homing set methods
+ */
+void Command::setHomingMethod(int8_t homingMethod) { homingMethod_ = homingMethod; }
+void Command::setHomingSpeeds(uint32_t speedForSwitchSearch, uint32_t speedForZeroSearch) {
+  homingSpeeds_[0] = speedForSwitchSearch;
+  homingSpeeds_[1] = speedForZeroSearch;
+}
+void Command::setHomingAcceleration(uint32_t homingAcceleration) {
+  homingAcceleration_ = homingAcceleration;
+}
+void Command::setHomeOffset(int32_t homeOffset) { homeOffset_ = homeOffset; }
+void Command::setHomePosition(int32_t homePosition) { homePosition_ = homePosition; }
+void Command::setCurrentThreshold(uint16_t currentThreshold) { currentThreshold_ = currentThreshold; }
+
 /*
  * get methods (raw units)
  */
@@ -210,6 +225,17 @@ double Command::getTargetVelocity() const { return targetVelocityUU_; }
 double Command::getTargetTorque() const { return targetTorqueUU_; }
 double Command::getTorqueOffset() const { return torqueOffsetUU_; }
 double Command::getVelocityOffset() const { return velocityOffsetUU_; }
+
+/*
+ * homing get methods
+ */
+int8_t Command::getHomingMethod() const { return homingMethod_; }
+uint32_t Command::getHomingSpeed0() const { return homingSpeeds_[0]; }
+uint32_t Command::getHomingSpeed1() const { return homingSpeeds_[1]; }
+uint32_t Command::getHomingAcceleration() const { return homingAcceleration_; }
+int32_t Command::getHomeOffset() const { return homeOffset_; }
+int32_t Command::getHomePosition() const { return homePosition_; }
+uint16_t Command::getCurrentThreshold() const { return currentThreshold_; }
 
 void Command::doUnitConversion() {
   if (!useRawCommands_) {

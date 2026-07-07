@@ -113,7 +113,7 @@ struct RxPdoHM
 {
   uint16_t controlWord_;
   int8_t homingMethod_;
-  uint32_t homingSpeeds_[2];
+  std::array<uint32_t, 2> homingSpeeds_;
   uint32_t homingAcceleration_;
   int32_t homeOffset_;
   int32_t homePosition_;

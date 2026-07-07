@@ -162,6 +162,12 @@ struct Controlword {
    */
   void setStateTransition16();
 
+    /*!
+   * State transition 17
+   * This corresponds to a "start homing" Controlword
+   */
+  void startHoming();
+
   /*!
    * Sets all bools of this struct to false
    */

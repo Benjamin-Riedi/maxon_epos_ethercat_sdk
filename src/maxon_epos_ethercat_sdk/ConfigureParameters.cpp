@@ -393,15 +393,6 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
           (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
               sizeof(int8_t) * 8,
       };
-      //     uint16_t controlWord_;
-      // int8_t homingMethod_;
-      // uint32_t homingSpeeds_[0];  // 0x6099:01 Speed for switch search
-      // uint32_t homingSpeeds_[1];  // 0x6099:02 Speed for zero search
-      // uint32_t homingAcceleration_;
-      // int32_t homeOffset_;
-      // int32_t homePosition_;
-      // uint16_t currentThreshold_;
-      // int8_t modeOfOperation_;
 
       subIndex = 0;
       for (const auto& objectIndex : objects) {
@@ -763,7 +754,7 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
                                   configuration_.configRunSdoVerifyTimeout);
 
       // Write objects...
-      std::array<uint32_t, 4> objects{
+      std::array<uint32_t, 1> objects{
           (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
       };
 

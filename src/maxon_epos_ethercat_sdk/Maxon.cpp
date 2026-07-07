@@ -176,7 +176,9 @@ bool Maxon::startup() {
   // std::cout << "velocityIGain: " << velocityIGain << std::endl;
 
   // write the configuration parameters via Sdo
-  success &= configParam();
+  if(!configuration_.disableConfigurationOnStartup) {
+    success &= configParam();
+  }
 
   // success &= sendSdoRead(OD_INDEX_FOLLOW_ERROR_WINDOW, 0x00, false, followErrorWindow);
   // success &= sendSdoRead(OD_INDEX_MAX_PROFILE_VELOCITY, 0x00, false, maxProfileVelocity);
@@ -364,6 +366,27 @@ void Maxon::updateWrite() {
         rxPdo.profileAccel_ = stagedCommand_.getProfileAccelRaw();
         rxPdo.profileDeccel_ = stagedCommand_.getProfileDeccelRaw();
         rxPdo.motionProfileType_ = stagedCommand_.getMotionProfileType();
+      }
+
+      // actually writing to the hardware
+      bus_->writeRxPdo(address_, rxPdo);
+      break;
+    }
+    case RxPdoTypeEnum::RxPdoHM: {
+      RxPdoHM rxPdo{};
+      {
+        std::lock_guard<std::recursive_mutex> lock(stagedCommandMutex_);
+        rxPdo.modeOfOperation_ = static_cast<int8_t>(modeOfOperation_);
+
+        controlword_.startHoming();
+        rxPdo.controlWord_ = controlword_.getRawControlword();
+        rxPdo.homingMethod_ = stagedCommand_.getHomingMethod();
+        rxPdo.homingSpeeds_[0] = stagedCommand_.getHomingSpeed0();
+        rxPdo.homingSpeeds_[1] = stagedCommand_.getHomingSpeed1();
+        rxPdo.homingAcceleration_ = stagedCommand_.getHomingAcceleration();
+        rxPdo.homeOffset_ = stagedCommand_.getHomeOffset();
+        rxPdo.homePosition_ = stagedCommand_.getHomePosition();
+        rxPdo.currentThreshold_ = stagedCommand_.getCurrentThreshold();
       }
 
       // actually writing to the hardware

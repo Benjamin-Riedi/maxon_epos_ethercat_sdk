@@ -119,6 +119,9 @@ uint16_t Controlword::getRawControlword() {
   if (halt_) {
     rawControlword |= (1 << 8);
   }
+  if (homingOperationStart_) {
+    rawControlword |= (1 << 4);
+  }
   // if (endlessMovement_) {
   //   rawControlword |= (1 << 15);
   // }
@@ -198,6 +201,11 @@ void Controlword::setStateTransition16() {
   enableVoltage_ = true;
   quickStop_ = true;
   enableOperation_ = true;
+}
+
+void Controlword::startHoming() {
+  setStateTransition4();
+  homingOperationStart_ = true;
 }
 
 void Controlword::setAllFalse() {
