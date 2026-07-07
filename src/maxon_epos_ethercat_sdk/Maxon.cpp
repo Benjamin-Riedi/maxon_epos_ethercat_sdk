@@ -378,7 +378,6 @@ void Maxon::updateWrite() {
         std::lock_guard<std::recursive_mutex> lock(stagedCommandMutex_);
         rxPdo.modeOfOperation_ = static_cast<int8_t>(modeOfOperation_);
 
-        controlword_.startHoming();
         rxPdo.controlWord_ = controlword_.getRawControlword();
         rxPdo.homingMethod_ = stagedCommand_.getHomingMethod();
         rxPdo.homingSpeeds_[0] = stagedCommand_.getHomingSpeed0();
@@ -387,6 +386,34 @@ void Maxon::updateWrite() {
         rxPdo.homeOffset_ = stagedCommand_.getHomeOffset();
         rxPdo.homePosition_ = stagedCommand_.getHomePosition();
         rxPdo.currentThreshold_ = stagedCommand_.getCurrentThreshold();
+      }
+
+      // actually writing to the hardware
+      bus_->writeRxPdo(address_, rxPdo);
+      break;
+    }
+    case RxPdoTypeEnum::RxPdoCSTCSPCSVHM: {
+      RxPdoCSTCSPCSVHM rxPdo{};
+      {
+        std::lock_guard<std::recursive_mutex> lock(stagedCommandMutex_);
+
+        rxPdo.modeOfOperation_ = static_cast<int8_t>(modeOfOperation_);
+        rxPdo.controlWord_ = controlword_.getRawControlword();
+
+        rxPdo.targetPosition_ = stagedCommand_.getTargetPositionRaw();
+        rxPdo.positionOffset_ = stagedCommand_.getPositionOffsetRaw();
+        rxPdo.targetTorque_ = stagedCommand_.getTargetTorqueRaw();
+        rxPdo.torqueOffset_ = stagedCommand_.getTorqueOffsetRaw();
+        rxPdo.targetVelocity_ = stagedCommand_.getTargetVelocityRaw();
+        rxPdo.velocityOffset_ = stagedCommand_.getVelocityOffsetRaw();
+        rxPdo.homingMethod_ = stagedCommand_.getHomingMethod();
+        rxPdo.homingSpeeds_[0] = stagedCommand_.getHomingSpeed0();
+        rxPdo.homingSpeeds_[1] = stagedCommand_.getHomingSpeed1();
+        rxPdo.homingAcceleration_ = stagedCommand_.getHomingAcceleration();
+        rxPdo.homeOffset_ = stagedCommand_.getHomeOffset();
+        rxPdo.homePosition_ = stagedCommand_.getHomePosition();
+        rxPdo.currentThreshold_ = stagedCommand_.getCurrentThreshold();
+
       }
 
       // actually writing to the hardware
@@ -500,6 +527,19 @@ void Maxon::updateRead() {
       }
       break;
     }
+    case TxPdoTypeEnum::TxPdoCSTCSPCSVHM: {
+      TxPdoCSTCSPCSVHM txPdo{};
+      // reading from the bus
+      bus_->readTxPdo(address_, txPdo);
+      {
+        std::lock_guard<std::recursive_mutex> lock(readingMutex_);
+        reading_.setStatusword(txPdo.statusword_);
+        reading_.setActualCurrent(txPdo.actualTorque_);
+        reading_.setActualVelocity(txPdo.actualVelocity_);
+        reading_.setActualPosition(txPdo.actualPosition_);
+      }
+      break;
+    }
     default:
       MELO_ERROR_STREAM(
           "[maxon_epos_ethercat_sdk:Maxon::updateRead] Unsupported Tx Pdo "
@@ -556,6 +596,37 @@ void Maxon::stageCommand(const Command& command) {
         "Target mode of operation '"
         << targetMode << "' for device '" << name_ << "' not allowed");
   }
+}
+
+void Maxon::activateHoming(const Command& command) {
+  std::lock_guard<std::recursive_mutex> lock(stagedCommandMutex_);
+  stagedCommand_ = command;
+  stagedCommand_.setPositionFactorRadToInteger(
+      static_cast<double>(configuration_.positionEncoderResolution) /
+      (2.0 * M_PI));
+
+  double currentFactorAToInt = 1000.0 / configuration_.nominalCurrentA;
+  stagedCommand_.setCurrentFactorAToInteger(currentFactorAToInt);
+  stagedCommand_.setTorqueFactorNmToInteger(
+      1000.0 /
+      (configuration_.nominalCurrentA * configuration_.torqueConstantNmA));
+
+  stagedCommand_.setUseRawCommands(configuration_.useRawCommands);
+
+  stagedCommand_.doUnitConversion();
+  const auto targetMode = command.getModeOfOperation();
+  if (std::find(configuration_.modesOfOperation.begin(),
+                configuration_.modesOfOperation.end(),
+                targetMode) != configuration_.modesOfOperation.end() && targetMode == ModeOfOperationEnum::HomingMode) {
+    modeOfOperation_ = targetMode;
+  } else {
+    MELO_ERROR_STREAM(
+        "[maxon_epos_ethercat_sdk:Maxon::stageCommand] "
+        "Target mode of operation '"
+        << targetMode << "' for device '" << name_ << "' not allowed");
+  }
+
+  controlword_.startHoming();
 }
 
 Reading Maxon::getReading() const {

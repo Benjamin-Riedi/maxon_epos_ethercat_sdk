@@ -53,6 +53,18 @@ std::ostream& operator<<(std::ostream& os,
     case maxon::TxPdoTypeEnum::TxPdoHM:
       os << "TxPdoHM";
       break;
+    case maxon::TxPdoTypeEnum::TxPdoCSTCSPCSVHM:
+      os << "TxPdoCSTCSPCSVHM";
+      break;
+    case maxon::TxPdoTypeEnum::TxPdoCSTCSPCSV:
+      os << "TxPdoCSTCSPCSV";
+      break;
+    case maxon::TxPdoTypeEnum::TxPdoCSTCSP:
+      os << "TxPdoCSTCSP";
+      break;
+    case maxon::TxPdoTypeEnum::TxPdoPVM:
+      os << "TxPdoPVM";
+      break;
     default:
       break;
   }
@@ -81,6 +93,15 @@ std::ostream& operator<<(std::ostream& os,
       break;
     case maxon::RxPdoTypeEnum::RxPdoHM:
       os << "RxPdoHM";
+      break;
+    case maxon::RxPdoTypeEnum::RxPdoCSTCSPCSVHM:
+      os << "RxPdoCSTCSPCSVHM";
+      break;
+    case maxon::RxPdoTypeEnum::RxPdoCSTCSPCSV:
+      os << "RxPdoCSTCSPCSV";
+      break;
+    case maxon::RxPdoTypeEnum::RxPdoCSTCSP:
+      os << "RxPdoCSTCSP";
       break;
     default:
       break;

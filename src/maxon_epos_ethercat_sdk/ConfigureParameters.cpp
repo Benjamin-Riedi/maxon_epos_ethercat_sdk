@@ -311,6 +311,65 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
 
       break;
     }
+    case RxPdoTypeEnum::RxPdoCSTCSPCSVHM: {
+      MELO_INFO_STREAM(
+          "[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
+          << "Cyclic Synchronous Toruqe/Position/Velocity/Homing Mixed Mode");
+
+      // Disable PDO
+      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+                                  static_cast<uint8_t>(0),
+                                  configuration_.configRunSdoVerifyTimeout);
+
+      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false,
+                                  static_cast<uint8_t>(0),
+                                  configuration_.configRunSdoVerifyTimeout);
+
+      // Write mapping
+      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x01, false,
+                                  OD_INDEX_RX_PDO_MAPPING_3,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+      // Write objects...
+      std::array<uint32_t, 15> objects{
+          (OD_INDEX_TARGET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+          (OD_INDEX_OFFSET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+          (OD_INDEX_TARGET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_OFFSET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_TARGET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_OFFSET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+          (OD_INDEX_HOMING_METHOD << 16) | (0x00 << 8) | sizeof(int8_t) * 8,
+          (OD_INDEX_HOMING_SPEEDS << 16) | (0x01 << 8) | sizeof(uint32_t) * 8,
+          (OD_INDEX_HOMING_SPEEDS << 16) | (0x02 << 8) | sizeof(uint32_t) * 8,
+          (OD_INDEX_HOMING_ACCELERATION << 16) | (0x00 << 8) | sizeof(uint32_t) * 8,
+          (OD_INDEX_HOME_OFFSET << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_HOME_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_CURRENT_THRESHOLD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
+          (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
+              sizeof(int8_t) * 8,
+      };
+
+      subIndex = 0;
+      for (const auto& objectIndex : objects) {
+        subIndex += 1;
+        rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, subIndex, false,
+                                    objectIndex,
+                                    configuration_.configRunSdoVerifyTimeout);
+      }
+
+      // Write number of objects
+      rxSuccess &=
+          sdoVerifyWrite(OD_INDEX_RX_PDO_MAPPING_3, 0x00, false, subIndex,
+                         configuration_.configRunSdoVerifyTimeout);
+
+      // Enable PDO
+      rxSuccess &= sdoVerifyWrite(OD_INDEX_RX_PDO_ASSIGNMENT, 0x00, false,
+                                  static_cast<uint8_t>(1),
+                                  configuration_.configRunSdoVerifyTimeout);
+      
+      break;
+    }
     case RxPdoTypeEnum::RxPdoPVM: {
       MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::mapPdos] Rx Pdo: "
                        << "Profile Velocity Mode");
@@ -646,6 +705,53 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
       MELO_INFO_STREAM(
           "[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
           << "Cyclic Synchronous Torque/Position/Velocity Mixed Mode");
+
+      // Disable PDO
+      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+                                  static_cast<uint8_t>(0),
+                                  configuration_.configRunSdoVerifyTimeout);
+
+      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false,
+                                  static_cast<uint8_t>(0),
+                                  configuration_.configRunSdoVerifyTimeout);
+
+      // Write mapping
+      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x01, false,
+                                  OD_INDEX_TX_PDO_MAPPING_3,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+      // Write objects...
+      std::array<uint32_t, 4> objects{
+          (OD_INDEX_STATUSWORD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
+          (OD_INDEX_TORQUE_ACTUAL << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
+          (OD_INDEX_VELOCITY_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+          (OD_INDEX_POSITION_ACTUAL << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
+      };
+
+      subIndex = 0;
+      for (const auto& objectIndex : objects) {
+        subIndex += 1;
+        txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, subIndex, false,
+                                    objectIndex,
+                                    configuration_.configRunSdoVerifyTimeout);
+      }
+
+      // Write number of objects
+      txSuccess &=
+          sdoVerifyWrite(OD_INDEX_TX_PDO_MAPPING_3, 0x00, false, subIndex,
+                         configuration_.configRunSdoVerifyTimeout);
+
+      // Enable PDO
+      txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,
+                                  static_cast<uint8_t>(1),
+                                  configuration_.configRunSdoVerifyTimeout);
+
+      break;
+    }
+    case TxPdoTypeEnum::TxPdoCSTCSPCSVHM: {
+      MELO_INFO_STREAM(
+          "[maxon_epos_ethercat_sdk:Maxon::mapPdos] Tx Pdo: "
+          << "Cyclic Synchronous Torque/Position/Velocity/Homing Mixed Mode");
 
       // Disable PDO
       txSuccess &= sdoVerifyWrite(OD_INDEX_TX_PDO_ASSIGNMENT, 0x00, false,

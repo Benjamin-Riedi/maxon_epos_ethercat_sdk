@@ -77,6 +77,7 @@ class Maxon : public ecat_master::EthercatDevice {
 
  public:
   void stageCommand(const Command& command);
+  void activateHoming(const Command& command);
   Reading getReading() const;
   void getReading(Reading& reading) const;
 

@@ -98,4 +98,12 @@ struct TxPdoHM
   uint16_t statusword_;
 } __attribute__((packed));
 
+struct TxPdoCSTCSPCSVHM
+{
+  uint16_t statusword_;
+  int16_t actualTorque_;
+  int32_t actualVelocity_;
+  int32_t actualPosition_;
+} __attribute__((packed));
+
 }  // namespace maxon
