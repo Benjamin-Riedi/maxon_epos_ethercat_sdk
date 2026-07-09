@@ -180,6 +180,7 @@ void ConfigurationParser::parseConfiguration(YAML::Node configNode) {
                          disable_configuration_on_startup)) {
       configuration_.disableConfigurationOnStartup = disable_configuration_on_startup;
   }
+  }
 
   /// The configuration options for the maxon::ethercat::Reading class
   if (configNode["Reading"].IsDefined()) {
@@ -219,13 +220,13 @@ void ConfigurationParser::parseConfiguration(YAML::Node configNode) {
   // homing_offset: 0 # [inc]
   // home_position: 0 # [inc]
   // current_threshold: 30 # [mA]
-    int8_t homingMethod;
+    int homingMethod;
     if (getValueFromFile(homingNode, "homing_method", homingMethod)) {
-      configuration_.homingMethod = homingMethod;
+      configuration_.homingMethod = static_cast<int8_t>(homingMethod);
     }
 
     std::pair<uint32_t, uint32_t> homingSpeeds;
-    if (getValueFromFile(homingNode, "homing_speed", homingSpeeds)) {
+    if (getValueFromFile(homingNode, "homing_speeds", homingSpeeds)) {
       configuration_.speedForSwitchSearch = homingSpeeds.first;
       configuration_.speedForZeroSearch = homingSpeeds.second;
     }
@@ -235,9 +236,9 @@ void ConfigurationParser::parseConfiguration(YAML::Node configNode) {
       configuration_.homingAcceleration = homingAcceleration;
     }
 
-    int32_t homeOffset;
-    if (getValueFromFile(homingNode, "homing_offset", homeOffset)) {
-      configuration_.homeOffset = homeOffset;
+    int32_t homingOffset;
+    if (getValueFromFile(homingNode, "homing_offset", homingOffset)) {
+      configuration_.homingOffset = homingOffset;
     }
 
     int32_t homePosition;
