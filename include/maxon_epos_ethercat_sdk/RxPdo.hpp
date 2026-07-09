@@ -37,6 +37,7 @@
  */
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 namespace maxon {
@@ -109,8 +110,7 @@ struct RxPdoPVM {
   int16_t motionProfileType_;
 } __attribute__((packed));
 
-struct RxPdoHM
-{
+struct RxPdoHM {
   uint16_t controlWord_;
   int8_t homingMethod_;
   std::array<uint32_t, 2> homingSpeeds_;
@@ -119,10 +119,9 @@ struct RxPdoHM
   int32_t homePosition_;
   uint16_t currentThreshold_;
   int8_t modeOfOperation_;
-}  __attribute__((packed));
+} __attribute__((packed));
 
-struct RxPdoCSTCSPCSVHM
-{
+struct RxPdoCSTCSPCSVHM {
   int16_t targetTorque_;
   int16_t torqueOffset_;
   int32_t targetPosition_;
@@ -130,13 +129,13 @@ struct RxPdoCSTCSPCSVHM
   int32_t targetVelocity_;
   int32_t velocityOffset_;
   uint16_t controlWord_;
+  int8_t modeOfOperation_;
   int8_t homingMethod_;
   std::array<uint32_t, 2> homingSpeeds_;
   uint32_t homingAcceleration_;
   int32_t homeOffset_;
   int32_t homePosition_;
   uint16_t currentThreshold_;
-  int8_t modeOfOperation_;
 } __attribute__((packed));
 
 }  // namespace maxon

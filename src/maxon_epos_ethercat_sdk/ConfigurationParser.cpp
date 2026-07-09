@@ -179,7 +179,7 @@ void ConfigurationParser::parseConfiguration(YAML::Node configNode) {
     if (getValueFromFile(maxonNode, "disable_configuration_on_startup",
                          disable_configuration_on_startup)) {
       configuration_.disableConfigurationOnStartup = disable_configuration_on_startup;
-  }
+    }
   }
 
   /// The configuration options for the maxon::ethercat::Reading class
