@@ -77,6 +77,8 @@ Maxon::Maxon(const std::string& name, const uint32_t address) {
 }
 
 bool Maxon::startup() {
+  MELO_INFO_STREAM("[maxon_epos_ethercat_sdk:Maxon::startup] Starting up "
+                   << name_ << " at address " << address_);
   bool success = true;
   success &= bus_->waitForState(EC_STATE_PRE_OP, address_, 50, 0.05);
   // bus_->syncDistributedClock0(address_, true, timeStep_, timeStep_ / 2.f); //
@@ -179,6 +181,7 @@ bool Maxon::startup() {
   if(!configuration_.disableConfigurationOnStartup) {
     success &= configParam();
   }
+  success &= configHoming();
 
   // success &= sendSdoRead(OD_INDEX_FOLLOW_ERROR_WINDOW, 0x00, false, followErrorWindow);
   // success &= sendSdoRead(OD_INDEX_MAX_PROFILE_VELOCITY, 0x00, false, maxProfileVelocity);
@@ -406,7 +409,6 @@ void Maxon::updateWrite() {
         rxPdo.torqueOffset_ = stagedCommand_.getTorqueOffsetRaw();
         rxPdo.targetVelocity_ = stagedCommand_.getTargetVelocityRaw();
         rxPdo.velocityOffset_ = stagedCommand_.getVelocityOffsetRaw();
-        rxPdo.homingMethod_ = stagedCommand_.getHomingMethod();
       }
 
       // actually writing to the hardware
@@ -594,19 +596,7 @@ void Maxon::stageCommand(const Command& command) {
 void Maxon::activateHoming(const Command& command) {
   std::lock_guard<std::recursive_mutex> lock(stagedCommandMutex_);
   stagedCommand_ = command;
-  stagedCommand_.setPositionFactorRadToInteger(
-      static_cast<double>(configuration_.positionEncoderResolution) /
-      (2.0 * M_PI));
 
-  double currentFactorAToInt = 1000.0 / configuration_.nominalCurrentA;
-  stagedCommand_.setCurrentFactorAToInteger(currentFactorAToInt);
-  stagedCommand_.setTorqueFactorNmToInteger(
-      1000.0 /
-      (configuration_.nominalCurrentA * configuration_.torqueConstantNmA));
-
-  stagedCommand_.setUseRawCommands(configuration_.useRawCommands);
-
-  stagedCommand_.doUnitConversion();
   const auto targetMode = command.getModeOfOperation();
   if (std::find(configuration_.modesOfOperation.begin(),
                 configuration_.modesOfOperation.end(),

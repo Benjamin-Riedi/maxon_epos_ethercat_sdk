@@ -55,6 +55,7 @@ class Statusword {
   bool internalLimitActive_{false};  // bit 11
   bool followingError_{false};       // bit 13, CSV & PPM mode
   // bool homingError_{false};          // bit 13, HMM mode
+  bool homingAttained_{false};       // bit 12
 
   // the raw statusword
   uint16_t rawStatusword_{0};

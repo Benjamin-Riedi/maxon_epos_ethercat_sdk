@@ -104,6 +104,7 @@ void Statusword::setFromRawStatusword(uint16_t status) {
   targetReached_ = static_cast<bool>(status & 1 << (10));
   internalLimitActive_ = static_cast<bool>(status & 1 << (11));
   followingError_ = static_cast<bool>(status & 1 << (13));
+  homingAttained_ = static_cast<bool>(status & 1 << (12));
   // homingError_ = static_cast<bool>(status & 1 << (13));
 
   rawStatusword_ = status;

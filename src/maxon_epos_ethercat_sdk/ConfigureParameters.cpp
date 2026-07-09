@@ -331,7 +331,7 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
                                   configuration_.configRunSdoVerifyTimeout);
 
       // Write objects...
-      std::array<uint32_t, 9> objects{
+      std::array<uint32_t, 8> objects{
           (OD_INDEX_TARGET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
           (OD_INDEX_OFFSET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
           (OD_INDEX_TARGET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
@@ -339,7 +339,6 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
           (OD_INDEX_TARGET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
           (OD_INDEX_OFFSET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
           (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
-          (OD_INDEX_HOMING_METHOD << 16) | (0x00 << 8) | sizeof(int8_t) * 8,
           (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
               sizeof(int8_t) * 8,
       };
@@ -900,9 +899,9 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
 bool Maxon::configHoming() {
   bool configSuccess = true;
 
-  // configSuccess &= sdoVerifyWrite(OD_INDEX_HOMING_METHOD, 0x00, false,
-  //                                 configuration_.homingMethod,
-  //                                 configuration_.configRunSdoVerifyTimeout);
+  configSuccess &= sdoVerifyWrite(OD_INDEX_HOMING_METHOD, 0x00, false,
+                                  configuration_.homingMethod,
+                                  configuration_.configRunSdoVerifyTimeout);
 
   configSuccess &= sdoVerifyWrite(OD_INDEX_HOMING_SPEEDS, 0x01, false,
                                   configuration_.speedForSwitchSearch,

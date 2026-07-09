@@ -130,7 +130,6 @@ struct RxPdoCSTCSPCSVHM
   int32_t targetVelocity_;
   int32_t velocityOffset_;
   uint16_t controlWord_;
-  int8_t homingMethod_;
   int8_t modeOfOperation_;
 } __attribute__((packed));
 
