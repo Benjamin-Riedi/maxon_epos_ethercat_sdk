@@ -85,7 +85,7 @@ double Reading::getAgeOfLastReadingInMicroseconds() const {
 int32_t Reading::getActualPositionRaw() const { return actualPosition_; }
 int32_t Reading::getActualVelocityRaw() const { return actualVelocity_; }
 uint16_t Reading::getRawStatusword() const { return statusword_; }
-int16_t Reading::getActualCurrentRaw() const { return actualCurrent_; }
+int16_t Reading::getActualCurrentRaw() const { return actualCurrent_; } // this is actually in [motorratedtorque/1000], so Nm not A
 uint16_t Reading::getAnalogInputRaw() const { return analogInput_; }
 uint32_t Reading::getBusVoltageRaw() const { return busVoltage_; }
 
@@ -100,10 +100,10 @@ double Reading::getActualVelocity() const {
          velocityFactorMicroRPMToRadPerSec_;
 }
 double Reading::getActualCurrent() const {
-  return static_cast<double>(actualCurrent_) * currentFactorIntegerToAmp_;
+  return static_cast<double>(actualCurrent_) * currentFactorIntegerToMilliAmp_;
 }
 double Reading::getActualTorque() const {
-  return static_cast<double>(actualCurrent_) * torqueFactorIntegerToNm_;
+  return static_cast<double>(actualCurrent_) * torqueFactorIntegerTomNm_;
 }
 double Reading::getAnalogInput() const {
   return static_cast<double>(analogInput_) * 0.001;
@@ -151,11 +151,11 @@ void Reading::setTimePointNow() { lastReadingTimePoint_ = ReadingClock::now(); }
 void Reading::setPositionFactorIntegerToRad(double positionFactor) {
   positionFactorIntegerToRad_ = positionFactor;
 }
-void Reading::setCurrentFactorIntegerToAmp(double currentFactor) {
-  currentFactorIntegerToAmp_ = currentFactor;
+void Reading::setCurrentFactorIntegerToMilliAmp(double currentFactor) {
+  currentFactorIntegerToMilliAmp_ = currentFactor;
 }
 void Reading::setTorqueFactorIntegerToNm(double torqueFactor) {
-  torqueFactorIntegerToNm_ = torqueFactor;
+  torqueFactorIntegerTomNm_ = torqueFactor;
 }
 
 double Reading::getAgeOfLastErrorInMicroseconds() const {
@@ -257,14 +257,14 @@ void Reading::configureReading(const Configuration& configuration) {
   forceAppendEqualError_ = configuration.forceAppendEqualError;
   forceAppendEqualFault_ = configuration.forceAppendEqualFault;
 
-  double currentFactor = configuration.nominalCurrentA / 1000.0;
+  double currentFactor = configuration.nominalCurrentA; // /1000 for A
 
-  currentFactorIntegerToAmp_ = currentFactor;
+  currentFactorIntegerToMilliAmp_ = currentFactor;
   positionFactorIntegerToRad_ =
       (2.0 * M_PI) /
       static_cast<double>(configuration.positionEncoderResolution);
-  torqueFactorIntegerToNm_ =
-      configuration.nominalCurrentA * configuration.torqueConstantNmA / 1000.0;
+  torqueFactorIntegerTomNm_ =
+      configuration.nominalCurrentA * configuration.torqueConstantNmA; // /1000 for Nm
 }
 
 }  // namespace maxon

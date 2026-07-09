@@ -116,7 +116,7 @@ class Reading {
 
   void setPositionFactorIntegerToRad(double positionFactor);
 
-  void setCurrentFactorIntegerToAmp(double currentFactor);
+  void setCurrentFactorIntegerToMilliAmp(double currentFactor);
 
   void setTorqueFactorIntegerToNm(double torqueFactor);
 
@@ -133,8 +133,8 @@ class Reading {
   double positionFactorIntegerToRad_{1};
   static constexpr double velocityFactorMicroRPMToRadPerSec_ =
       2.0 * M_PI / (60.0 * 1e6);
-  double currentFactorIntegerToAmp_{1};
-  double torqueFactorIntegerToNm_{1};
+  double currentFactorIntegerToMilliAmp_{1};
+  double torqueFactorIntegerTomNm_{1};
 
   ReadingTimePoint lastReadingTimePoint_;
 

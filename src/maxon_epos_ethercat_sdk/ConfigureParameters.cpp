@@ -331,7 +331,7 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
                                   configuration_.configRunSdoVerifyTimeout);
 
       // Write objects...
-      std::array<uint32_t, 15> objects{
+      std::array<uint32_t, 9> objects{
           (OD_INDEX_TARGET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
           (OD_INDEX_OFFSET_TORQUE << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
           (OD_INDEX_TARGET_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
@@ -340,12 +340,6 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
           (OD_INDEX_OFFSET_VELOCITY << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
           (OD_INDEX_CONTROLWORD << 16) | (0x00 << 8) | sizeof(int16_t) * 8,
           (OD_INDEX_HOMING_METHOD << 16) | (0x00 << 8) | sizeof(int8_t) * 8,
-          (OD_INDEX_HOMING_SPEEDS << 16) | (0x01 << 8) | sizeof(uint32_t) * 8,
-          (OD_INDEX_HOMING_SPEEDS << 16) | (0x02 << 8) | sizeof(uint32_t) * 8,
-          (OD_INDEX_HOMING_ACCELERATION << 16) | (0x00 << 8) | sizeof(uint32_t) * 8,
-          (OD_INDEX_HOME_OFFSET << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_HOME_POSITION << 16) | (0x00 << 8) | sizeof(int32_t) * 8,
-          (OD_INDEX_CURRENT_THRESHOLD << 16) | (0x00 << 8) | sizeof(uint16_t) * 8,
           (OD_INDEX_MODES_OF_OPERATION << 16) | (0x00 << 8) |
               sizeof(int8_t) * 8,
       };
@@ -901,6 +895,40 @@ bool Maxon::mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum) {
   }
 
   return (txSuccess && rxSuccess);
+}
+
+bool Maxon::configHoming() {
+  bool configSuccess = true;
+
+  // configSuccess &= sdoVerifyWrite(OD_INDEX_HOMING_METHOD, 0x00, false,
+  //                                 configuration_.homingMethod,
+  //                                 configuration_.configRunSdoVerifyTimeout);
+
+  configSuccess &= sdoVerifyWrite(OD_INDEX_HOMING_SPEEDS, 0x01, false,
+                                  configuration_.speedForSwitchSearch,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+  configSuccess &= sdoVerifyWrite(OD_INDEX_HOMING_SPEEDS, 0x02, false,
+                                  configuration_.speedForZeroSearch,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+  configSuccess &= sdoVerifyWrite(OD_INDEX_HOMING_ACCELERATION, 0x00, false,
+                                  configuration_.homingAcceleration,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+  configSuccess &= sdoVerifyWrite(OD_INDEX_HOME_OFFSET, 0x00, false,
+                                  configuration_.homingOffset,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+  configSuccess &= sdoVerifyWrite(OD_INDEX_HOME_POSITION, 0x00, false,
+                                  configuration_.homePosition,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+  configSuccess &= sdoVerifyWrite(OD_INDEX_CURRENT_THRESHOLD, 0x00, false,
+                                  configuration_.currentThreshold,
+                                  configuration_.configRunSdoVerifyTimeout);
+
+  return configSuccess;
 }
 
 bool Maxon::configParam() {

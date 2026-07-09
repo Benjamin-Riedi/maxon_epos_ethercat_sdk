@@ -407,13 +407,6 @@ void Maxon::updateWrite() {
         rxPdo.targetVelocity_ = stagedCommand_.getTargetVelocityRaw();
         rxPdo.velocityOffset_ = stagedCommand_.getVelocityOffsetRaw();
         rxPdo.homingMethod_ = stagedCommand_.getHomingMethod();
-        rxPdo.homingSpeeds_[0] = stagedCommand_.getHomingSpeed0();
-        rxPdo.homingSpeeds_[1] = stagedCommand_.getHomingSpeed1();
-        rxPdo.homingAcceleration_ = stagedCommand_.getHomingAcceleration();
-        rxPdo.homeOffset_ = stagedCommand_.getHomeOffset();
-        rxPdo.homePosition_ = stagedCommand_.getHomePosition();
-        rxPdo.currentThreshold_ = stagedCommand_.getCurrentThreshold();
-
       }
 
       // actually writing to the hardware

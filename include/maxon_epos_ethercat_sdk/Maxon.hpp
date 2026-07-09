@@ -104,6 +104,7 @@ class Maxon : public ecat_master::EthercatDevice {
  protected:
   void engagePdoStateMachine();
   bool mapPdos(RxPdoTypeEnum rxPdoTypeEnum, TxPdoTypeEnum txPdoTypeEnum);
+  bool configHoming();
   bool configParam();
   Controlword getNextStateTransitionControlword(
       const DriveState& requestedDriveState,
