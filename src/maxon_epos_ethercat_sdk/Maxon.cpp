@@ -546,10 +546,10 @@ void Maxon::updateRead() {
     hasRead_ = true;
   }
 
-  // Print warning if drive is in FaultReactionAcrive state.
+  // Print warning if drive is in FaultReactionActive state.
   if (reading_.getDriveState() == DriveState::FaultReactionActive) {
     MELO_ERROR_STREAM("[maxon_epos_ethercat_sdk:Maxon::updateRead] '"
-                      << name_ << "' is in drive state 'FaultReactionAcrive'");
+                      << name_ << "' is in drive state 'FaultReactionActive'");
     printErrorCode();
   }
 
@@ -1019,6 +1019,9 @@ Controlword Maxon::getNextStateTransitionControlword(
           break;
         case DriveState::Fault:
           controlword.setStateTransition15();
+          break;
+        case DriveState::FaultReactionActive:
+          controlword.setStateTransition14();
           break;
         default:
           MELO_ERROR_STREAM(

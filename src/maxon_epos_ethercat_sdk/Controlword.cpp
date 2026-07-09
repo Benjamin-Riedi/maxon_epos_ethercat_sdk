@@ -190,6 +190,10 @@ void Controlword::setStateTransition12() {
   setAllFalse();
 }
 
+void Controlword::setStateTransition14() {
+  faultReset_ = true;
+}
+
 void Controlword::setStateTransition15() {
   setAllFalse();
   faultReset_ = true;
